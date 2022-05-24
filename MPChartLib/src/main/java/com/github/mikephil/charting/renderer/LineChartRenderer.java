@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.charts.LineChart;
@@ -689,7 +690,7 @@ public class LineChartRenderer extends LineRadarRenderer {
 
                 Bitmap circleBitmap = imageCache.getBitmap(j);
 
-                if (circleBitmap != null) {
+                if (circleBitmap != null && e.getY() > 60) { //TODO 是否展示圆点
                     c.drawBitmap(circleBitmap, mCirclesBuffer[0] - circleRadius, mCirclesBuffer[1] - circleRadius, null);
                 }
             }

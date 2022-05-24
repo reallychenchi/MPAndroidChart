@@ -1,5 +1,6 @@
 package com.github.mikephil.charting.data;
 
+import android.graphics.Color;
 import android.graphics.DashPathEffect;
 
 import com.github.mikephil.charting.interfaces.datasets.ILineScatterCandleRadarDataSet;
@@ -75,6 +76,11 @@ public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends Bar
         return mHighlightLineWidth;
     }
 
+    @Override
+    public int getHighLightColor() {
+        return Color.BLUE; // 高亮颜色
+    }
+
     /**
      * Enables the highlight-line to be drawn in dashed mode, e.g. like this "- - - - - -"
      *
@@ -115,6 +121,7 @@ public abstract class LineScatterCandleRadarDataSet<T extends Entry> extends Bar
         lineScatterCandleRadarDataSet.mDrawHorizontalHighlightIndicator = mDrawHorizontalHighlightIndicator;
         lineScatterCandleRadarDataSet.mDrawVerticalHighlightIndicator = mDrawVerticalHighlightIndicator;
         lineScatterCandleRadarDataSet.mHighlightLineWidth = mHighlightLineWidth;
+        lineScatterCandleRadarDataSet.mHighLightColor = Color.BLUE;
         lineScatterCandleRadarDataSet.mHighlightDashPathEffect = mHighlightDashPathEffect;
     }
 }

@@ -1,6 +1,9 @@
 
 package com.github.mikephil.charting.charts;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -45,6 +48,7 @@ import com.github.mikephil.charting.utils.Utils;
 public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<? extends
         IBarLineScatterCandleBubbleDataSet<? extends Entry>>>
         extends Chart<T> implements BarLineScatterCandleBubbleDataProvider {
+    public static final List<Runnable> smDrawAxisLabel = new ArrayList<>();
 
     /**
      * the maximum number of entries to which values will be drawn
@@ -179,6 +183,7 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mBorderPaint.setStyle(Style.STROKE);
         mBorderPaint.setColor(Color.BLACK);
         mBorderPaint.setStrokeWidth(Utils.convertDpToPixel(1f));
+        mBorderPaint.setTextSize(30f);
     }
 
     // for performance tracking
@@ -240,7 +245,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         }
 
         mRenderer.drawData(canvas);
-
         if (!mXAxis.isDrawGridLinesBehindDataEnabled())
             mXAxisRenderer.renderGridLines(canvas);
 
@@ -253,7 +257,6 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         // if highlighting is enabled
         if (valuesToHighlight())
             mRenderer.drawHighlighted(canvas, mIndicesToHighlight);
-
         // Removes clipping rectangle
         canvas.restoreToCount(clipRestoreCount);
 
@@ -271,6 +274,10 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
         mXAxisRenderer.renderAxisLabels(canvas);
         mAxisRendererLeft.renderAxisLabels(canvas);
         mAxisRendererRight.renderAxisLabels(canvas);
+        for (Runnable r : smDrawAxisLabel) {
+            r.run();
+        }
+        smDrawAxisLabel.clear();
 
         if (isClipValuesToContentEnabled()) {
             clipRestoreCount = canvas.save();
