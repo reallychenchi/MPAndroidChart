@@ -113,6 +113,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
             // vertical grid lines
             xAxis.enableGridDashedLine(10f, 10f, 0f);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         }
 
         YAxis yAxis;

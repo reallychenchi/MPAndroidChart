@@ -1,12 +1,25 @@
 
 package com.github.mikephil.charting.charts;
 
+import static com.github.mikephil.charting.renderer.BarLineScatterCandleBubbleRenderer.isInBoundsX;
+
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
+import com.github.mikephil.charting.R;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.renderer.LineChartRenderer;
+import com.github.mikephil.charting.utils.MPPointD;
+import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.Utils;
 
 /**
  * Chart that draws lines, surfaces, circles, ...
@@ -27,11 +40,18 @@ public class LineChart extends BarLineChartBase<LineData> implements LineDataPro
         super(context, attrs, defStyle);
     }
 
+    private Paint mAxisLabelPaint;
+    private Paint mAxisBackgroundPainter;
+
     @Override
     protected void init() {
         super.init();
 
         mRenderer = new LineChartRenderer(this, mAnimator, mViewPortHandler);
+        mAxisLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mAxisLabelPaint.setTextSize(20);
+        mAxisBackgroundPainter = new Paint();
+        mAxisBackgroundPainter.setColor(Color.CYAN);
     }
 
     @Override
@@ -46,5 +66,34 @@ public class LineChart extends BarLineChartBase<LineData> implements LineDataPro
             ((LineChartRenderer) mRenderer).releaseBitmap();
         }
         super.onDetachedFromWindow();
+    }
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        if (valuesToHighlight()) {
+            LineData lineData = getLineData();
+
+            for (Highlight high : mIndicesToHighlight) {
+
+                ILineDataSet set = lineData.getDataSetByIndex(high.getDataSetIndex());
+
+                if (set == null || !set.isHighlightEnabled())
+                    continue;
+
+                Entry e = set.getEntryForXValue(high.getX(), high.getY());
+
+                if (!isInBoundsX(e, set, mAnimator))
+                    continue;
+
+                MPPointD pix = getTransformer(set.getAxisDependency())
+                    .getPixelForValues(e.getX(), e.getY() * mAnimator.getPhaseY());
+                Drawable d = getResources().getDrawable(R.drawable.label_background, null);
+                Utils.drawXAxisValue(canvas, "X: " + e.getX(),
+                    (float) pix.x, mViewPortHandler.contentBottom(), mAxisLabelPaint, new MPPointF(0.5f, -0.5f), 0.0f, d);
+                Utils.drawXAxisValue(canvas, "Y: " + e.getY(), mViewPortHandler.contentLeft(),
+                    (float) pix.y, mAxisLabelPaint, new MPPointF(1f, -0.5f), 0.0f, d);
+            }
+
+        }
     }
 }
