@@ -134,46 +134,13 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             yAxis.setAxisLineColor(Color.TRANSPARENT);
         }
 
-
-        {   // // Create Limit Lines // //
-            LimitLine llXAxis = new LimitLine(9f, "Index 10");
-            llXAxis.setLineWidth(4f);
-            llXAxis.enableDashedLine(10f, 10f, 0f);
-            llXAxis.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
-            llXAxis.setTextSize(10f);
-            llXAxis.setTypeface(tfRegular);
-
-            LimitLine ll1 = new LimitLine(150f, "Upper Limit");
-            ll1.setLineWidth(4f);
-            ll1.enableDashedLine(10f, 10f, 0f);
-            ll1.setLabelPosition(LimitLabelPosition.RIGHT_TOP);
-            ll1.setTextSize(10f);
-            ll1.setTypeface(tfRegular);
-
-            LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
-            ll2.setLineWidth(4f);
-            ll2.enableDashedLine(10f, 10f, 0f);
-            ll2.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
-            ll2.setTextSize(10f);
-            ll2.setTypeface(tfRegular);
-
-            // draw limit lines behind data instead of on top
-            yAxis.setDrawLimitLinesBehindData(true);
-            xAxis.setDrawLimitLinesBehindData(true);
-
-            // add limit lines
-            yAxis.addLimitLine(ll1);
-            yAxis.addLimitLine(ll2);
-            //xAxis.addLimitLine(llXAxis);
-        }
-
         // add data
         seekBarX.setProgress(45);
         seekBarY.setProgress(180);
         setData(45, 180);
 
         // draw points over time
-        chart.animateX(1500);
+        //chart.animateX(1500);
 
         // get the legend (only possible after setting data)
         Legend l = chart.getLegend();
