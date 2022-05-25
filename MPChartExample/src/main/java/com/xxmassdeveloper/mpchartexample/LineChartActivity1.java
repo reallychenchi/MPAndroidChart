@@ -114,6 +114,8 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             // vertical grid lines
             xAxis.enableGridDashedLine(10f, 10f, 0f);
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setAxisLineColor(Color.TRANSPARENT);
+            xAxis.setGridColor(Color.TRANSPARENT);
         }
 
         YAxis yAxis;
@@ -129,6 +131,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             // axis range
             yAxis.setAxisMaximum(200f);
             yAxis.setAxisMinimum(-50f);
+            yAxis.setAxisLineColor(Color.TRANSPARENT);
         }
 
 
