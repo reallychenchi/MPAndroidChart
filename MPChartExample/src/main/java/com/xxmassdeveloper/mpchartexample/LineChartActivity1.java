@@ -98,8 +98,8 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             chart.setMarker(mv);
 
             // enable scaling and dragging
-            chart.setDragEnabled(true);
-            chart.setScaleEnabled(true);
+            //chart.setDragEnabled(true);
+            //chart.setScaleEnabled(true);
             // chart.setScaleXEnabled(true);
             // chart.setScaleYEnabled(true);
 
@@ -113,6 +113,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
             // vertical grid lines
             xAxis.enableGridDashedLine(10f, 10f, 0f);
+            chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         }
 
         YAxis yAxis;
@@ -141,14 +142,14 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
             LimitLine ll1 = new LimitLine(150f, "Upper Limit");
             ll1.setLineWidth(4f);
-            ll1.enableDashedLine(10f, 10f, 0f);
+            //ll1.enableDashedLine(10f, 10f, 0f);
             ll1.setLabelPosition(LimitLabelPosition.RIGHT_TOP);
             ll1.setTextSize(10f);
             ll1.setTypeface(tfRegular);
 
             LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
             ll2.setLineWidth(4f);
-            ll2.enableDashedLine(10f, 10f, 0f);
+            //ll2.enableDashedLine(10f, 10f, 0f);
             ll2.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
             ll2.setTextSize(10f);
             ll2.setTypeface(tfRegular);
@@ -158,8 +159,8 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             xAxis.setDrawLimitLinesBehindData(true);
 
             // add limit lines
-            yAxis.addLimitLine(ll1);
-            yAxis.addLimitLine(ll2);
+            //yAxis.addLimitLine(ll1);
+            //yAxis.addLimitLine(ll2);
             //xAxis.addLimitLine(llXAxis);
         }
 
@@ -201,21 +202,25 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             // create a dataset and give it a type
             set1 = new LineDataSet(values, "DataSet 1");
 
+            set1.setDrawCircles(true);
             set1.setDrawIcons(false);
+            set1.setCircleHoleRadius(1);
+            set1.setCircleHoleColor(Color.WHITE);
+            set1.setDrawCircleHole(true);
 
             // draw dashed line
-            set1.enableDashedLine(10f, 5f, 0f);
+            //set1.enableDashedLine(10f, 5f, 0f);
 
             // black lines and points
-            set1.setColor(Color.BLACK);
-            set1.setCircleColor(Color.BLACK);
+            set1.setColor(Color.RED);
+            set1.setCircleColor(Color.RED);
 
             // line thickness and point size
-            set1.setLineWidth(1f);
+            set1.setLineWidth(3f); // 数据折线的宽度
             set1.setCircleRadius(3f);
 
             // draw points as solid circles
-            set1.setDrawCircleHole(false);
+            //set1.setDrawCircleHole(false);
 
             // customize legend entry
             set1.setFormLineWidth(1f);
@@ -226,7 +231,8 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             set1.setValueTextSize(9f);
 
             // draw selection line as dashed
-            set1.enableDashedHighlightLine(10f, 5f, 0f);
+            set1.enableDashedHighlightLine(20f, 20f, 0f);
+            set1.setHighlightLineWidth(3f);
 
             // set the filled area
             set1.setDrawFilled(true);
