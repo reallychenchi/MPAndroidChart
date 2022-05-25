@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.Legend.LegendForm;
 import com.github.mikephil.charting.components.LimitLine;
@@ -30,6 +31,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
@@ -116,6 +118,19 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setAxisLineColor(Color.TRANSPARENT);
             xAxis.setGridColor(Color.TRANSPARENT);
+            xAxis.setAvoidFirstLastClipping(true);
+            xAxis.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getAxisLabel(float value, AxisBase axis) {
+                    if (value ==  axis.mAxisMinimum) {
+                        return "00:00";
+                    } else if (value == axis.mAxisMaximum) {
+                        return String.format("00:%d    ", (int)value);
+                    } else {
+                        return "";
+                    }
+                }
+            });
         }
 
         YAxis yAxis;
@@ -129,15 +144,21 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             yAxis.enableGridDashedLine(10f, 10f, 0f);
 
             // axis range
-            yAxis.setAxisMaximum(200f);
-            yAxis.setAxisMinimum(-50f);
+            yAxis.setAxisMaximum(100f);
+            yAxis.setAxisMinimum(0f);
+            yAxis.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getAxisLabel(float value, AxisBase axis) {
+                    return String.format("%d%%", (int)value);
+                }
+            });
             yAxis.setAxisLineColor(Color.TRANSPARENT);
         }
 
         // add data
         seekBarX.setProgress(45);
         seekBarY.setProgress(180);
-        setData(45, 180);
+        setData(15, 90);
 
         // draw points over time
         //chart.animateX(1500);
@@ -155,7 +176,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
         for (int i = 0; i < count; i++) {
 
-            float val = (float) (Math.random() * range) - 30;
+            float val = (float) (Math.random() * range);
             Entry entry = new Entry(i, val, getResources().getDrawable(R.drawable.star));
             entry.setShowPoint(false);
             values.add(entry);
