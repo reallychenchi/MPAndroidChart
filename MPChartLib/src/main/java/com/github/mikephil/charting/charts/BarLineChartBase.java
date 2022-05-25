@@ -304,6 +304,20 @@ public abstract class BarLineChartBase<T extends BarLineScatterCandleBubbleData<
             Log.i(LOG_TAG, "Drawtime: " + drawtime + " ms, average: " + average + " ms, cycles: "
                     + drawCycles);
         }
+
+        if (null != mIndicesToHighlight && mIndicesToHighlight.length > 0) {
+            this.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (mIndicesToHighlight != null && mIndicesToHighlight.length > 0) {
+                        Highlight highlights = mIndicesToHighlight[0];
+                        mIndicesToHighlight[0] = new Highlight(highlights.getX() + 1f,
+                            highlights.getY(), highlights.getDataSetIndex(), highlights.getDataIndex());
+                        BarLineChartBase.this.invalidate();
+                    }
+                }
+            }, 300);
+        }
     }
 
     /**
