@@ -98,6 +98,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             // Set the marker to the chart
             mv.setChartView(chart);
             chart.setMarker(mv);
+            //chart.setDrawMarkers(false);
 
             // enable scaling and dragging
             //chart.setDragEnabled(true);
@@ -181,7 +182,8 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
                 val = val + 1;
             }
             Entry entry = new Entry(i, val + 50, getResources().getDrawable(R.drawable.star));
-            entry.setShowPoint(false);
+            entry.setShowPoint( i == 20 || i == 30);
+            entry.setShowMark(i == 20 || i == 30);
             values.add(entry);
         }
 

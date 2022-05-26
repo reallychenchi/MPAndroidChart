@@ -20,6 +20,7 @@ public class Entry extends BaseEntry implements Parcelable {
     private float x = 0f;
 
     private boolean showPoint = true;
+    private boolean showMark = false;
 
     public Entry() {
 
@@ -97,6 +98,14 @@ public class Entry extends BaseEntry implements Parcelable {
 
     public void setShowPoint(boolean showPoint) {
         this.showPoint = showPoint;
+    }
+
+    public boolean isShowMark() {
+        return this.showMark;
+    }
+
+    public void setShowMark(boolean showMark) {
+        this.showMark = showMark;
     }
 
     /**

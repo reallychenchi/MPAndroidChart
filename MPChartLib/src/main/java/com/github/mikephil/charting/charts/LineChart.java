@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.ViewTreeObserver;
 
 import com.github.mikephil.charting.R;
 import com.github.mikephil.charting.data.DataSet;
@@ -18,10 +19,12 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
+import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.renderer.LineChartRenderer;
 import com.github.mikephil.charting.utils.MPPointD;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.Utils;
 
 /**
@@ -30,6 +33,19 @@ import com.github.mikephil.charting.utils.Utils;
  * @author Philipp Jahoda
  */
 public class LineChart extends BarLineChartBase<LineData> implements LineDataProvider {
+    ViewTreeObserver.OnGlobalLayoutListener mOnGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override
+        public void onGlobalLayout() {
+            for(Highlight highlight : mMarkerPos) {
+                ILineDataSet set = getLineData().getDataSetByIndex(highlight.getDataSetIndex());
+                Entry e = set.getEntryForIndex(highlight.getDataIndex());
+                MPPointD pix = getTransformer(set.getAxisDependency())
+                    .getPixelForValues(e.getX(), e.getY());
+                highlight.setDraw((float)pix.x, (float)pix.y);
+            }
+            getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        }
+    };
 
     public LineChart(Context context) {
         super(context);
@@ -60,6 +76,28 @@ public class LineChart extends BarLineChartBase<LineData> implements LineDataPro
     @Override
     public LineData getLineData() {
         return mData;
+    }
+
+    @Override
+    public void setData(LineData data) {
+        for(int i = 0; i < data.getDataSetCount(); ++i) {
+            ILineDataSet dataSet = data.getDataSetByIndex(i);
+            for(int j = 0; j < dataSet.getEntryCount(); ++j) {
+                Entry e = dataSet.getEntryForIndex(j);
+                if (e.isShowMark()) {
+                    Highlight highlight = new Highlight(e.getX(), e.getY(), i);
+                    highlight.setDataIndex(j);
+                    mMarkerPos.add(highlight);
+                }
+            }
+        }
+        super.setData(data);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        getViewTreeObserver().addOnGlobalLayoutListener(mOnGlobalLayoutListener);
     }
 
     @Override
