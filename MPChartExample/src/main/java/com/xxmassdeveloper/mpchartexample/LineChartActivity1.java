@@ -158,7 +158,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
         // add data
         seekBarX.setProgress(45);
         seekBarY.setProgress(180);
-        setData(15, 90);
+        setData(15, 10);
 
         // draw points over time
         //chart.animateX(1500);
@@ -176,7 +176,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
         for (int i = 0; i < count; i++) {
 
-            float val = (float) (Math.random() * range);
+            float val = (float) (Math.random() * range) + 50;
             Entry entry = new Entry(i, val, getResources().getDrawable(R.drawable.star));
             entry.setShowPoint(false);
             values.add(entry);
@@ -414,12 +414,15 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
+/*
         tvX.setText(String.valueOf(seekBarX.getProgress()));
         tvY.setText(String.valueOf(seekBarY.getProgress()));
 
         setData(seekBarX.getProgress(), seekBarY.getProgress());
-
+*/
         // redraw
+        double percent = seekBarY.getProgress() * 1.0 / seekBarY.getMax();
+        chart.setHighlighterPos(percent);
         chart.invalidate();
     }
 
