@@ -174,10 +174,13 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
         ArrayList<Entry> values = new ArrayList<>();
 
+        float val = 1;
         for (int i = 0; i < count; i++) {
 
-            float val = (float) (Math.random() * range) + 50;
-            Entry entry = new Entry(i, val, getResources().getDrawable(R.drawable.star));
+            if (Math.random() * range > 0.99999) {
+                val = val + 1;
+            }
+            Entry entry = new Entry(i, val + 50, getResources().getDrawable(R.drawable.star));
             entry.setShowPoint(false);
             values.add(entry);
         }
@@ -422,6 +425,15 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
         setData(seekBarX.getProgress(), seekBarY.getProgress());
 */
         // redraw
+        seekBarY.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (seekBarY.getProgress() < seekBarY.getMax()) {
+                    seekBarY.setProgress(seekBarY.getProgress() + 1);
+                }
+            }
+        }, 500);
+
         double percent = seekBarY.getProgress() * 1.0 / seekBarY.getMax();
         chart.setHighlighterPos(percent);
         chart.invalidate();
