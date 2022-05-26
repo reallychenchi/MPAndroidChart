@@ -100,13 +100,13 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             chart.setMarker(mv);
 
             // enable scaling and dragging
-            chart.setDragEnabled(true);
-            chart.setScaleEnabled(true);
+            //chart.setDragEnabled(true);
+            //chart.setScaleEnabled(true);
             // chart.setScaleXEnabled(true);
             // chart.setScaleYEnabled(true);
 
             // force pinch zoom along both axis
-            chart.setPinchZoom(true);
+            //chart.setPinchZoom(true);
         }
 
         XAxis xAxis;
@@ -158,7 +158,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
         // add data
         seekBarX.setProgress(45);
         seekBarY.setProgress(180);
-        setData(15, 10);
+        setData(50, 3);
 
         // draw points over time
         //chart.animateX(1500);
@@ -246,6 +246,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             // create a data object with the data sets
             LineData data = new LineData(dataSets);
 
+            data.setDrawValues(false); // 设置不展示数值
             // set data
             chart.setData(data);
         }
