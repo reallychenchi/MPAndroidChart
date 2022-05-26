@@ -3,6 +3,8 @@ package com.github.mikephil.charting.charts;
 
 import static com.github.mikephil.charting.renderer.BarLineScatterCandleBubbleRenderer.isInBoundsX;
 
+import java.util.List;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 import com.github.mikephil.charting.R;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -67,6 +70,26 @@ public class LineChart extends BarLineChartBase<LineData> implements LineDataPro
         }
         super.onDetachedFromWindow();
     }
+
+    public void setHighlighterPos(double precent) {
+        LineData lineData = getLineData();
+        if (null == lineData || lineData.getDataSetCount() == 0) {
+            return;
+        }
+        ILineDataSet dataSet = lineData.getDataSetByIndex(0);
+        int idx = (int)(precent * dataSet.getEntryCount());
+        if (idx >= dataSet.getEntryCount()) {
+            idx = dataSet.getEntryCount() - 1;
+        }
+        if (idx < 0) {
+            idx = 0;
+        }
+        Entry e = dataSet.getEntryForIndex(idx);
+        Highlight highlight = new Highlight(e.getX(), e.getY(), 0);
+        mIndicesToHighlight = new Highlight[1];
+        mIndicesToHighlight[0] = highlight;
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
