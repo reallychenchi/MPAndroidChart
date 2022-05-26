@@ -46,6 +46,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.renderer.DataRenderer;
 import com.github.mikephil.charting.renderer.LegendRenderer;
 import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
@@ -54,6 +55,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Baseclass of all Chart-Views.
@@ -452,6 +454,7 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
      * chart
      */
     protected Highlight[] mIndicesToHighlight;
+    protected List<Highlight> mMarkerPos = new ArrayList<>();
 
     /**
      * The maximum distance in dp away from an entry causing it to highlight.
@@ -715,16 +718,16 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
     protected void drawMarkers(Canvas canvas) {
 
         // if there is no marker view or drawing marker is disabled
-        if (mMarker == null || !isDrawMarkersEnabled() || !valuesToHighlight())
+        if (mMarker == null || !isDrawMarkersEnabled() )
             return;
 
-        for (int i = 0; i < mIndicesToHighlight.length; i++) {
+        for (int i = 0; i < mMarkerPos.size() ; i++) {
 
-            Highlight highlight = mIndicesToHighlight[i];
+            Highlight highlight = mMarkerPos.get(i);
 
             IDataSet set = mData.getDataSetByIndex(highlight.getDataSetIndex());
 
-            Entry e = mData.getEntryForHighlight(mIndicesToHighlight[i]);
+            Entry e = mData.getEntryForHighlight(mMarkerPos.get(i));
             int entryIndex = set.getEntryIndex(e);
 
             // make sure entry not null
