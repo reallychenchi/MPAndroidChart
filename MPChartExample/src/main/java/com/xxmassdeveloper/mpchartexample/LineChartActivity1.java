@@ -87,6 +87,10 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
             // enable touch gestures
             chart.setTouchEnabled(true);
+            chart.setAutoScaleMinMaxEnabled(false);
+            chart.setScaleEnabled(false);
+            chart.setScaleXEnabled(false);
+            chart.setScaleYEnabled(false);
 
             // set listeners
             chart.setOnChartValueSelectedListener(this);
@@ -457,6 +461,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
         Log.i("Entry selected", e.toString());
         Log.i("LOW HIGH", "low: " + chart.getLowestVisibleX() + ", high: " + chart.getHighestVisibleX());
         Log.i("MIN MAX", "xMin: " + chart.getXChartMin() + ", xMax: " + chart.getXChartMax() + ", yMin: " + chart.getYChartMin() + ", yMax: " + chart.getYChartMax());
+        //seekBarY.setProgress();
     }
 
     @Override
