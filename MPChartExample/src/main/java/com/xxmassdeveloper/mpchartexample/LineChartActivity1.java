@@ -37,6 +37,7 @@ import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
+import com.xxmassdeveloper.mpchartexample.custom.LineChartCustom;
 import com.xxmassdeveloper.mpchartexample.custom.MyMarkerView;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
@@ -52,7 +53,7 @@ import java.util.List;
 public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListener,
         OnChartValueSelectedListener {
 
-    private LineChart chart;
+    private LineChartCustom chart;
     private SeekBar seekBarX, seekBarY;
     private TextView tvX, tvY;
 
