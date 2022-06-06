@@ -19,7 +19,7 @@ public class Entry extends BaseEntry implements Parcelable {
     /** the x value */
     private float x = 0f;
 
-    private boolean showPoint = true;
+    private boolean showPoint = false;
     private boolean showMark = false;
 
     public Entry() {
