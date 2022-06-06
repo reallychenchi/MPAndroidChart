@@ -616,8 +616,7 @@ public abstract class Utils {
     }
 
     public static void drawXAxisValue(Canvas c, String text, float x, float y,
-        Paint paint,
-        MPPointF anchor, float angleDegrees, Drawable d) {
+        Paint paint, MPPointF anchor, Drawable d, int hPadding, int vPadding) {
 
         float drawOffsetX = 0.f;
         float drawOffsetY = 0.f;
@@ -637,56 +636,31 @@ public abstract class Utils {
         Paint.Align originalTextAlign = paint.getTextAlign();
         paint.setTextAlign(Paint.Align.LEFT);
 
-        if (angleDegrees != 0.f) {
-
-            // Move the text drawing rect in a way that it always rotates around its center
-            drawOffsetX -= mDrawTextRectBuffer.width() * 0.5f;
-            drawOffsetY -= lineHeight * 0.5f;
-
-            float translateX = x;
-            float translateY = y;
-
-            // Move the "outer" rect relative to the anchor, assuming its centered
-            if (anchor.x != 0.5f || anchor.y != 0.5f) {
-                final FSize rotatedSize = getSizeOfRotatedRectangleByDegrees(
-                    mDrawTextRectBuffer.width(),
-                    lineHeight,
-                    angleDegrees);
-
-                translateX -= rotatedSize.width * (anchor.x - 0.5f);
-                translateY -= rotatedSize.height * (anchor.y - 0.5f);
-                FSize.recycleInstance(rotatedSize);
-            }
-
-            c.save();
-            c.translate(translateX, translateY);
-            c.rotate(angleDegrees);
-
-            c.drawText(text, drawOffsetX, drawOffsetY, paint);
-
-            c.restore();
-        } else {
-            if (anchor.x != 0.f || anchor.y != 0.f) {
-
-                drawOffsetX -= mDrawTextRectBuffer.width() * anchor.x;
-                drawOffsetY -= lineHeight * anchor.y;
-            }
-
-            drawOffsetX += x;
-            drawOffsetY += y;
-
-            d.setBounds((int)drawOffsetX, (int)drawOffsetY - 20, (int)x + 100, (int)y + 100);
-            d.draw(c);
-            c.drawText(text, drawOffsetX, drawOffsetY, paint);
+        if (anchor.x != 0.f || anchor.y != 0.f) {
+            drawOffsetX -= mDrawTextRectBuffer.width() * anchor.x;
+            drawOffsetY -= lineHeight * anchor.y;
         }
+
+        drawOffsetX += x;
+        drawOffsetY += y;
+
+        int width, height;
+        Rect bounds = new Rect();
+        paint.getTextBounds(text, 0, text.length(), bounds);
+        width = bounds.width();
+        height = bounds.height();
+        d.setBounds((int)drawOffsetX - hPadding, (int)drawOffsetY - height - vPadding,
+            (int)drawOffsetX + width + hPadding, (int)drawOffsetY + vPadding);
+        d.draw(c);
+        c.drawText(text, drawOffsetX, drawOffsetY, paint);
 
         paint.setTextAlign(originalTextAlign);
     }
 
     public static void drawMultilineText(Canvas c, StaticLayout textLayout,
-                                         float x, float y,
-                                         TextPaint paint,
-                                         MPPointF anchor, float angleDegrees) {
+        float x, float y,
+        TextPaint paint,
+        MPPointF anchor, float angleDegrees) {
 
         float drawOffsetX = 0.f;
         float drawOffsetY = 0.f;

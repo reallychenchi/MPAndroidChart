@@ -65,7 +65,7 @@ public class LineChartCustom extends LineChart {
 
         mRenderer = new LineChartRenderer(this, mAnimator, mViewPortHandler);
         mAxisLabelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mAxisLabelPaint.setTextSize(20);
+        mAxisLabelPaint.setTextSize(30);
         mAxisBackgroundPainter = new Paint();
         mAxisBackgroundPainter.setColor(Color.CYAN);
     }
@@ -132,10 +132,11 @@ public class LineChartCustom extends LineChart {
                 MPPointD pix = getTransformer(set.getAxisDependency())
                     .getPixelForValues(e.getX(), e.getY() * mAnimator.getPhaseY());
                 Drawable d = getResources().getDrawable(R.drawable.label_background, null);
-                Utils.drawXAxisValue(canvas, "X: " + e.getX(),
-                    (float) pix.x, mViewPortHandler.contentBottom(), mAxisLabelPaint, new MPPointF(0.5f, -0.5f), 0.0f, d);
+                Utils.drawXAxisValue(canvas, "X: " + e.getX(), (float) pix.x,
+                    mViewPortHandler.contentBottom(), mAxisLabelPaint, new MPPointF(0.5f, 0f),
+                    d, 20, 5);
                 Utils.drawXAxisValue(canvas, "Y: " + e.getY(), mViewPortHandler.contentLeft(),
-                    (float) pix.y, mAxisLabelPaint, new MPPointF(1f, -0.5f), 0.0f, d);
+                    (float) pix.y, mAxisLabelPaint, new MPPointF(1f, .5f), d, 10, 10);
             }
 
         }

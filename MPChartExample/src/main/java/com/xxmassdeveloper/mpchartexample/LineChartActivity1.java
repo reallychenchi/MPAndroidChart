@@ -36,6 +36,7 @@ import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
 import com.xxmassdeveloper.mpchartexample.custom.LineChartCustom;
 import com.xxmassdeveloper.mpchartexample.custom.MyMarkerView;
@@ -98,7 +99,21 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             chart.setDrawGridBackground(false);
 
             // create marker to display box when values are selected
-            MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view);
+            MyMarkerView mv = new MyMarkerView(this, R.layout.custom_marker_view){
+                @Override
+                public MPPointF getOffset() {
+                    int dataIdx = mHighlight.getDataIndex();
+                    int dataSetIdx = mHighlight.getDataSetIndex();
+                    Entry entry = chart.getData().getDataSets().get(dataSetIdx).getEntryForIndex(dataIdx);
+                    Entry entryP = chart.getData().getDataSets().get(dataSetIdx).getEntryForIndex(dataIdx - 1);
+                    Entry entryL = chart.getData().getDataSets().get(dataSetIdx).getEntryForIndex(dataIdx + 1);
+                    if (entry.getY() >= entryP.getY() && entry.getY() <= entryL.getY()) {
+                        return new MPPointF(-getWidth(), -getHeight());
+                    } else {
+                        return new MPPointF(0f, -getHeight());
+                    }
+                }
+            };
 
             // Set the marker to the chart
             mv.setChartView(chart);
@@ -129,9 +144,10 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
                 @Override
                 public String getAxisLabel(float value, AxisBase axis) {
                     if (value ==  axis.mAxisMinimum) {
-                        return "00:00";
+                        return String.format("%02d:%02d", (int)value, (int)value);
                     } else if (value == axis.mAxisMaximum) {
-                        return String.format("00:%d    ", (int)value);
+                        //return String.format("%02d:%02d", (int)value % 100, (int)value % 100);
+                        return String.format("%02d:%02d", 25, 34);
                     } else {
                         return "";
                     }
@@ -173,7 +189,8 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
         Legend l = chart.getLegend();
 
         // draw legend entries as lines
-        l.setForm(LegendForm.LINE);
+        l.setForm(LegendForm.CIRCLE);
+        l.setEnabled(false);
     }
 
     private void setData(int count, float range) {
@@ -184,7 +201,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
         for (int i = 0; i < count; i++) {
 
             if (Math.random() * range > 0.99999) {
-                val = val + 1;
+                val = val - 1;
             }
             Entry entry = new Entry(i, val + 50, getResources().getDrawable(R.drawable.star));
             entry.setShowPoint( i == 20 || i == 30);

@@ -115,6 +115,8 @@ public class Entry extends BaseEntry implements Parcelable {
      */
     public Entry copy() {
         Entry e = new Entry(x, getY(), getData());
+        e.showMark = showMark;
+        e.showPoint = showPoint;
         return e;
     }
 
@@ -160,6 +162,8 @@ public class Entry extends BaseEntry implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeFloat(this.x);
         dest.writeFloat(this.getY());
+        dest.writeInt(isShowMark()? 1 : 0);
+        dest.writeInt(showMark? 1 : 0);
         if (getData() != null) {
             if (getData() instanceof Parcelable) {
                 dest.writeInt(1);
@@ -175,6 +179,8 @@ public class Entry extends BaseEntry implements Parcelable {
     protected Entry(Parcel in) {
         this.x = in.readFloat();
         this.setY(in.readFloat());
+        this.setShowMark(in.readInt() == 1);
+        this.showPoint = in.readInt() == 1;
         if (in.readInt() == 1) {
             this.setData(in.readParcelable(Object.class.getClassLoader()));
         }

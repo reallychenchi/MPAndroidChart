@@ -3,6 +3,7 @@ package com.xxmassdeveloper.mpchartexample.custom;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.components.MarkerView;
@@ -22,6 +23,7 @@ import com.xxmassdeveloper.mpchartexample.R;
 public class MyMarkerView extends MarkerView {
 
     private final TextView tvContent;
+    public Highlight mHighlight;
 
     public MyMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
@@ -33,22 +35,29 @@ public class MyMarkerView extends MarkerView {
     // content (user-interface)
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-
+        mHighlight = highlight;
         if (e instanceof CandleEntry) {
 
             CandleEntry ce = (CandleEntry) e;
 
             tvContent.setText(Utils.formatNumber(ce.getHigh(), 0, true));
         } else {
-
             tvContent.setText("精彩时刻：" + Utils.formatNumber(e.getY(), 0, true));
         }
 
         super.refreshContent(e, highlight);
     }
+    @Override
+    public MPPointF getOffsetForDrawingAtPoint(float posX, float posY) {
+        MPPointF ret = super.getOffsetForDrawingAtPoint(posX, posY);
+        Log.d("DBG", "getOffsetForDrawingAtPoint " + posX + ", " + posY + ", " + ret.x + ", " + ret.y);
+        //return new MPPointF(posX, posY);
+        return ret;
+    }
 
     @Override
     public MPPointF getOffset() {
-        return new MPPointF(-(getWidth() / 2), -getHeight());
+        //return new MPPointF(-(getWidth() / 2), -getHeight());
+        return new MPPointF(0, -getHeight());
     }
 }
