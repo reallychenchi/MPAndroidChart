@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.Legend.LegendForm;
 import com.github.mikephil.charting.components.LimitLine;
@@ -30,11 +31,13 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IFillFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.dataprovider.LineDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
+import com.xxmassdeveloper.mpchartexample.custom.LineChartCustom;
 import com.xxmassdeveloper.mpchartexample.custom.MyMarkerView;
 import com.xxmassdeveloper.mpchartexample.notimportant.DemoBase;
 
@@ -50,7 +53,7 @@ import java.util.List;
 public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListener,
         OnChartValueSelectedListener {
 
-    private LineChart chart;
+    private LineChartCustom chart;
     private SeekBar seekBarX, seekBarY;
     private TextView tvX, tvY;
 
@@ -85,6 +88,10 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
             // enable touch gestures
             chart.setTouchEnabled(true);
+            chart.setAutoScaleMinMaxEnabled(false);
+            chart.setScaleEnabled(false);
+            chart.setScaleXEnabled(false);
+            chart.setScaleYEnabled(false);
 
             // set listeners
             chart.setOnChartValueSelectedListener(this);
@@ -96,15 +103,16 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             // Set the marker to the chart
             mv.setChartView(chart);
             chart.setMarker(mv);
+            //chart.setDrawMarkers(false);
 
             // enable scaling and dragging
-            chart.setDragEnabled(true);
-            chart.setScaleEnabled(true);
+            //chart.setDragEnabled(true);
+            //chart.setScaleEnabled(true);
             // chart.setScaleXEnabled(true);
             // chart.setScaleYEnabled(true);
 
             // force pinch zoom along both axis
-            chart.setPinchZoom(true);
+            //chart.setPinchZoom(true);
         }
 
         XAxis xAxis;
@@ -113,6 +121,22 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
             // vertical grid lines
             xAxis.enableGridDashedLine(10f, 10f, 0f);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setAxisLineColor(Color.TRANSPARENT);
+            xAxis.setGridColor(Color.TRANSPARENT);
+            xAxis.setAvoidFirstLastClipping(true);
+            xAxis.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getAxisLabel(float value, AxisBase axis) {
+                    if (value ==  axis.mAxisMinimum) {
+                        return "00:00";
+                    } else if (value == axis.mAxisMaximum) {
+                        return String.format("00:%d    ", (int)value);
+                    } else {
+                        return "";
+                    }
+                }
+            });
         }
 
         YAxis yAxis;
@@ -126,50 +150,24 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             yAxis.enableGridDashedLine(10f, 10f, 0f);
 
             // axis range
-            yAxis.setAxisMaximum(200f);
-            yAxis.setAxisMinimum(-50f);
-        }
-
-
-        {   // // Create Limit Lines // //
-            LimitLine llXAxis = new LimitLine(9f, "Index 10");
-            llXAxis.setLineWidth(4f);
-            llXAxis.enableDashedLine(10f, 10f, 0f);
-            llXAxis.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
-            llXAxis.setTextSize(10f);
-            llXAxis.setTypeface(tfRegular);
-
-            LimitLine ll1 = new LimitLine(150f, "Upper Limit");
-            ll1.setLineWidth(4f);
-            ll1.enableDashedLine(10f, 10f, 0f);
-            ll1.setLabelPosition(LimitLabelPosition.RIGHT_TOP);
-            ll1.setTextSize(10f);
-            ll1.setTypeface(tfRegular);
-
-            LimitLine ll2 = new LimitLine(-30f, "Lower Limit");
-            ll2.setLineWidth(4f);
-            ll2.enableDashedLine(10f, 10f, 0f);
-            ll2.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
-            ll2.setTextSize(10f);
-            ll2.setTypeface(tfRegular);
-
-            // draw limit lines behind data instead of on top
-            yAxis.setDrawLimitLinesBehindData(true);
-            xAxis.setDrawLimitLinesBehindData(true);
-
-            // add limit lines
-            yAxis.addLimitLine(ll1);
-            yAxis.addLimitLine(ll2);
-            //xAxis.addLimitLine(llXAxis);
+            yAxis.setAxisMaximum(100f);
+            yAxis.setAxisMinimum(0f);
+            yAxis.setValueFormatter(new ValueFormatter() {
+                @Override
+                public String getAxisLabel(float value, AxisBase axis) {
+                    return String.format("%d%%", (int)value);
+                }
+            });
+            yAxis.setAxisLineColor(Color.TRANSPARENT);
         }
 
         // add data
         seekBarX.setProgress(45);
         seekBarY.setProgress(180);
-        setData(45, 180);
+        setData(50, 3);
 
         // draw points over time
-        chart.animateX(1500);
+        //chart.animateX(1500);
 
         // get the legend (only possible after setting data)
         Legend l = chart.getLegend();
@@ -182,10 +180,16 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
 
         ArrayList<Entry> values = new ArrayList<>();
 
+        float val = 1;
         for (int i = 0; i < count; i++) {
 
-            float val = (float) (Math.random() * range) - 30;
-            values.add(new Entry(i, val, getResources().getDrawable(R.drawable.star)));
+            if (Math.random() * range > 0.99999) {
+                val = val + 1;
+            }
+            Entry entry = new Entry(i, val + 50, getResources().getDrawable(R.drawable.star));
+            entry.setShowPoint( i == 20 || i == 30);
+            entry.setShowMark(i == 20 || i == 30);
+            values.add(entry);
         }
 
         LineDataSet set1;
@@ -252,6 +256,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
             // create a data object with the data sets
             LineData data = new LineData(dataSets);
 
+            data.setDrawValues(false); // 设置不展示数值
             // set data
             chart.setData(data);
         }
@@ -420,12 +425,24 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
+/*
         tvX.setText(String.valueOf(seekBarX.getProgress()));
         tvY.setText(String.valueOf(seekBarY.getProgress()));
 
         setData(seekBarX.getProgress(), seekBarY.getProgress());
-
+*/
         // redraw
+        seekBarY.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (seekBarY.getProgress() < seekBarY.getMax()) {
+                    seekBarY.setProgress(seekBarY.getProgress() + 1);
+                }
+            }
+        }, 500);
+
+        double percent = seekBarY.getProgress() * 1.0 / seekBarY.getMax();
+        chart.setHighlighterPos(percent);
         chart.invalidate();
     }
 
@@ -445,6 +462,7 @@ public class LineChartActivity1 extends DemoBase implements OnSeekBarChangeListe
         Log.i("Entry selected", e.toString());
         Log.i("LOW HIGH", "low: " + chart.getLowestVisibleX() + ", high: " + chart.getHighestVisibleX());
         Log.i("MIN MAX", "xMin: " + chart.getXChartMin() + ", xMax: " + chart.getXChartMax() + ", yMin: " + chart.getYChartMin() + ", yMax: " + chart.getYChartMax());
+        //seekBarY.setProgress();
     }
 
     @Override

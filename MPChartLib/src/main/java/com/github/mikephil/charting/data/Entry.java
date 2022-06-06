@@ -19,6 +19,9 @@ public class Entry extends BaseEntry implements Parcelable {
     /** the x value */
     private float x = 0f;
 
+    private boolean showPoint = true;
+    private boolean showMark = false;
+
     public Entry() {
 
     }
@@ -87,6 +90,22 @@ public class Entry extends BaseEntry implements Parcelable {
      */
     public void setX(float x) {
         this.x = x;
+    }
+
+    public boolean showPoint() {
+        return this.showPoint;
+    }
+
+    public void setShowPoint(boolean showPoint) {
+        this.showPoint = showPoint;
+    }
+
+    public boolean isShowMark() {
+        return this.showMark;
+    }
+
+    public void setShowMark(boolean showMark) {
+        this.showMark = showMark;
     }
 
     /**
