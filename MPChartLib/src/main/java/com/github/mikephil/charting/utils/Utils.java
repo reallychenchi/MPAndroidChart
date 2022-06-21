@@ -617,7 +617,7 @@ public abstract class Utils {
 
     public static void drawXAxisValue(Canvas c, String text, float x, float y,
         Paint paint, MPPointF anchor, Drawable d, int hPadding, int vPadding) {
-
+        int adjustOfset = 2;
         float drawOffsetX = 0.f;
         float drawOffsetY = 0.f;
 
@@ -649,8 +649,10 @@ public abstract class Utils {
         paint.getTextBounds(text, 0, text.length(), bounds);
         width = bounds.width();
         height = bounds.height();
-        d.setBounds((int)drawOffsetX - hPadding, (int)drawOffsetY - height - vPadding,
-            (int)drawOffsetX + width + hPadding, (int)drawOffsetY + vPadding);
+        d.setBounds((int)drawOffsetX - hPadding + adjustOfset,
+            (int)drawOffsetY - height - vPadding,
+            (int)drawOffsetX + width + hPadding + adjustOfset,
+            (int)drawOffsetY + vPadding);
         d.draw(c);
         c.drawText(text, drawOffsetX, drawOffsetY, paint);
 
